@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+cd "$(dirname "$0")"
+
+echo "==> Setting up database directory"
+dbdir="$PWD/db"
+mkdir -p "$dbdir"
+
+echo "==> Compressing and copying packages"
+builddir="$PWD/build"
+(
+  cd "$builddir"
+  for pkg in *.pkg.tar; do
+    echo "Compressing $pkg"
+    zstd -o "$dbdir/$pkg.zst" "$pkg"
+  done
+)
+
+echo "==> Setting up a package database"
+repo-add "$dbdir/plasma-mobile.db.tar.gz" "$dbdir"/*.pkg.tar.*
+
+echo "==> Replacing symlinks"
+(
+  cd "$dbdir"
+  for file in *.db *.files; do
+    cp --remove-destination "$(readlink "$file")" "$file"
+  done
+)

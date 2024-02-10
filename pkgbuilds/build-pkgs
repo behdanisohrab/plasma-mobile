@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -e
+cd "$(dirname "$0")"
+
+if ! command -v makepkg > /dev/null; then
+  echo "This script requires makepkg on your PATH!"
+  exit 1
+fi
+
+echo "==> Reading packages"
+pkgs=()
+while IFS= read -r line; do
+  if [[ "$line" != "#"* ]] && [[ -n "$line" ]]; then
+    pkgs+=("$line")
+  fi
+done < packages.txt
+
+echo "==> Setting up build directory"
+builddir="$PWD/build"
+mkdir -p "$builddir"
+
+echo "==> Building the packages"
+for pkg in "${pkgs[@]}"; do
+  (
+    cd "$pkg"
+
+    # Build the package (and compress later to speed things up under emulation)
+    if PKGDEST="$builddir" PKGEXT='.pkg.tar' makepkg -si --noconfirm --nocheck; then
+      echo "$pkg built successfully"
+    else
+      echo "::warning title=$pkg could not be built::See the build logs for details"
+    fi
+
+    # Clean up the src and pkg directories to save space
+    rm -rf src pkg
+  )
+done

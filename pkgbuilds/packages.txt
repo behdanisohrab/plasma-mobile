@@ -1,0 +1,14 @@
+# The packages to be built. Must be topologically sorted w.r.t dependencies.
+cmake-extras
+telephaty-qt
+plasma-mobile
+plasma-mobile-nm
+spacebar
+plasma-phonebook
+plasma-mobile-sounds
+qqc2-breeze-style
+plasma-dialer
+hfd-service
+plasma-mobile-settings
+desktop-plasma-mobile-full
+desktop-plasma-mobile-minimal

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -e
+cd "$(dirname "$0")"
+
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run as root!"
+  exit 1
+fi
+
+if [ -z "$BUILDER_UID" ] || [ -z "$BUILDER_GID" ]; then
+  echo "Please make sure that BUILDER_UID and BUILDER_GID are set!"
+  exit 1
+fi
+
+if [ $(getent group "$BUILDER_GID") ]; then
+  echo "==> Warning: Group with GID $BUILDER_GID already exists, the existing group will be used"
+else
+  echo "==> Setting up builder group (GID: $BUILDER_GID)"
+  groupadd -g "$BUILDER_GID" builder
+fi
+
+echo "==> Setting up builder user (UID: $BUILDER_UID)"
+useradd -m -u "$BUILDER_UID" -g "$BUILDER_GID" builder
+
+echo "==> Installing system dependencies"
+pacman -Syu --noconfirm --needed base-devel git sudo pacman-contrib
+
+echo "==> Setting up sudoers"
+for user in root builder; do
+  echo "$user ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+done
+
+echo "==> Running '$@' under builder user (current architecture: $(uname -m))"
+sudo -u builder "$@"

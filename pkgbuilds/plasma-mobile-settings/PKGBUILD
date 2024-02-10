@@ -1,0 +1,64 @@
+# Maintainer: Danct12 <danct12@disroot.org>
+# Contributor: Bernhard Landauer <oberon@manjaro.org>
+# Contributor: Devin Lin <devin@kde.org>
+_mode=host
+pkgname=plasma-mobile-settings
+pkgdesc="Settings files for Plasma Mobile"
+pkgver=1.0
+pkgrel=1
+_arches=all
+arch=(
+    x86_64
+    armv7h
+    aarch64
+)
+license=(GPL-3.0-or-later)
+depends=(
+    powerdevil
+    kscreenlocker
+    plasma-mobile
+    hfd-service
+    pipewire
+)
+makedepends=(
+    git
+)
+source=(
+    applications-blacklistrc
+    kdeglobals
+    kwinrc
+    kscreenlockerrc
+    startkderc
+    plasmamobile.json
+    powerdevil.hook
+    kde-tweaks.sh
+    hfd-service.txt
+)
+sha256sums=(
+    4ca8472c70b1b7ad32bca4e68b47be84eeedbc2f53a91de16fbccb2cffc3fa1d
+    5f693e248b58d79f08f0aa30b2716938305e3b7d528bebca3d9428a907c534bf
+    8f6315e12b5cf2bf84f1440d407d904f4fc4db831b77732bc2ef7a982cc76aad
+    a8ba8eb604185b184e46d2bfd43df12f239295dd7bfe9e6711e0e0d238b40a3b
+    bf14819bb36a95cbb465169ca3640d8a93f9a648881f9f52f6315a1ba40d273c
+    42db6e099ab56aa4f6c01107fe83897a059bc371a389379cd3c260d4ab8fd2bc
+    42c4de4c9310904ada1c84e23a34e42fcf20f8318a5f798372468381965dbd18
+    a20bf47c2a3a5d22029f953933079a2b8c0948e2c687e32f084d6964309ae113
+    a96e50dfe3cc8e9736b98e2f6b2d92a0987e4dfa8069db00947237e78472e4de
+)
+
+package() {
+    xdg=$pkgdir/etc/xdg
+    install -Dm644 applications-blacklistrc $xdg/applications-blacklistrc
+    install -Dm644 kdeglobals $xdg/kdeglobals
+    install -Dm644 kwinrc $xdg/kwinrc
+    install -Dm644 kscreenlockerrc $xdg/kscreenlockerrc
+    install -Dm644 startkderc $xdg/startkderc
+    install -Dm644 "${srcdir}/plasmamobile.json" -t "${pkgdir}/usr/share/maliit/keyboard2/devices/"
+    # install alpm hook
+    install -Dm644 "${srcdir}/powerdevil.hook" "${pkgdir}/usr/share/libalpm/hooks/90-powerdevil.hook"
+
+    install -Dm755 "${srcdir}/kde-tweaks.sh" "${pkgdir}/etc/profile.d/kde-tweaks.sh"
+
+    # Enable hfd-service for vibrations
+    install -Dm644 "$srcdir"/hfd-service.txt "$pkgdir"/etc/kupfer/systemd/hfd-service.txt
+}

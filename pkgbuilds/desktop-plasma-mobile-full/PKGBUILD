@@ -1,0 +1,32 @@
+# Contributor: Devin Lin <devin@kde.org>
+# Maintainer: Sohrab Behdani <sohrabbehdani@parchlinux.ir>
+pkgname=desktop-plasma-mobile-full
+pkgdesc="Parch Mobile desktop: The Qt-based Plasma Mobile desktop environment"
+pkgver=5.26
+pkgrel=4
+_arches=all
+arch=(
+    x86_64
+    armv7h
+    aarch64
+)
+license=(GPL3)
+depends=(
+    desktop-plasma-mobile-minimal
+    kclock
+    kweather
+    plasma-dialer
+    spacebar
+    angelfish
+    kalk
+    krecorder
+    plasma-phonebook
+    qmlkonsole
+    index-fm
+    kdeconnect
+    discover
+    koko
+    elisa
+    plasma-mobile-sounds
+    plasma-workspace-wallpapers
+)

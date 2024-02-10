@@ -1,0 +1,58 @@
+# Maintainer: Danct12 <danct12@disroot.org>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Antonio Rojas <arojas@archlinux.org>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+_mode=host
+pkgname=plasma-mobile-nm
+_pkgname=plasma-nm
+pkgdesc="Plasma applet written in QML for managing network connections - Mobile Edition"
+pkgver=5.27.4.r0.gbeccd5e
+pkgrel=2
+_arches=all
+arch=(
+    aarch64
+    x86_64
+    armv7h
+)
+license=(GPL-2.0-or-later)
+provides=(
+    "${_pkgname}"
+)
+conflicts=(
+    "${_pkgname}"
+)
+depends=(
+    plasma-workspace
+    modemmanager-qt5
+    networkmanager-qt5
+    qca-qt5
+    mobile-broadband-provider-info
+)
+makedepends=(
+    extra-cmake-modules
+    openconnect
+)
+optdepends=("openconnect: Cisco AnyConnect VPN plugin")
+_commit=beccd5e389d2c0860b7ea7404b842ad550c55013
+source=(
+    "git+https://invent.kde.org/plasma/plasma-nm.git#commit=$_commit"
+)
+sha256sums=(
+    SKIP
+)
+
+pkgver() {
+    cd "${_pkgname}"
+    git describe --long --abbrev=7 --tags "$_commit" | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+    cmake -B build -S $_pkgname \
+        -DBUILD_TESTING=OFF \
+        -DBUILD_MOBILE=True
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+}

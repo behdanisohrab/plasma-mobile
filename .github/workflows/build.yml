@@ -1,0 +1,75 @@
+name: Build
+
+on:
+  push:
+  schedule:
+  # Run every day at 5:20
+  - cron: '20 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+        - platform: linux/arm64
+          arch: aarch64
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install system dependencies
+      run: sudo apt-get install -y tree
+    - name: Set up QEMU
+      if: matrix.platform != 'linux/amd64'
+      uses: docker/setup-qemu-action@v2
+      with:
+        platforms: ${{ matrix.platform }}
+    - name: Build packages (${{ matrix.platform }})
+      run: >
+        docker run
+        --rm
+        --env BUILDER_UID=$(id -u)
+        --env BUILDER_GID=$(id -g)
+        --platform "${{ matrix.platform }}"
+        --mount type=bind,src="$PWD",dst="/src/${{ github.repository }}"
+        --workdir "/src/${{ github.repository }}/pkgbuilds"
+        --entrypoint "/src/${{ github.repository }}/pkgbuilds/with-builder-user"
+        ghcr.io/fwcd/archlinux
+        ./build-pkgs
+    - name: Build package database
+      run: >
+        docker run
+        --rm
+        --user "$(id -u):$(id -g)"
+        --mount type=bind,src="$PWD",dst="/src/${{ github.repository }}"
+        --workdir "/src/${{ github.repository }}/pkgbuilds"
+        ghcr.io/fwcd/archlinux
+        ./build-db
+    - name: Output build trees for debugging
+      run: |
+        echo "==> Build tree"
+        tree pkgbuilds/build
+        echo "==> Database tree"
+        tree pkgbuilds/db
+    - name: Set up Git config
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+    - name: Commit and push updates
+      if: github.ref == 'refs/heads/main'
+      run: |
+        git add -A
+        git commit --allow-empty -m "Update packages ($(date '+%Y-%m-%d-%H-%M'))"
+        git push
+    - name: Publish release
+      if: github.ref == 'refs/heads/main'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        tag="$(date '+%Y-%m-%d-%H-%M')"
+        gh release create --title "$tag" "$tag" || true
+        gh release upload --clobber "$tag" pkgbuilds/db/*

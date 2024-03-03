@@ -13,7 +13,7 @@ builddir="$PWD/build"
   cd "$builddir"
   for pkg in *.pkg.tar; do
     echo "Compressing $pkg"
-    zstd -o "$dbdir/$pkg.zst" "$pkg"
+    zstd -f -o "$dbdir/$pkg.zst" "$pkg"
   done
 )
 

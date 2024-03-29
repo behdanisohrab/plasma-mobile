@@ -1,0 +1,32 @@
+# Contributor: Devin Lin <devin@kde.org>
+_mode=cross
+pkgname=flavour-plasma-mobile
+pkgdesc="Kupfer flavour: The Qt-based Plasma Mobile desktop environment"
+pkgver=6.0.2
+pkgrel=1
+_arches=all
+arch=(
+    x86_64
+    armv7h
+    aarch64
+)
+license=(GPL3)
+depends=(
+    flavour-plasma-mobile-minimal
+    kclock
+    kweather
+    plasma-dialer
+    spacebar
+    angelfish
+    kalk
+    krecorder
+    plasma-phonebook
+    qmlkonsole
+    index-fm
+    kdeconnect
+    discover
+    koko
+    elisa
+    plasma-mobile-sounds
+    plasma-workspace-wallpapers
+)

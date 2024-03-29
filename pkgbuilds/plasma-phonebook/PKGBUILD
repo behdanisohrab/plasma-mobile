@@ -5,7 +5,7 @@
 _mode=host
 pkgname=plasma-phonebook
 pkgdesc="Phonebook application for Mobile Devices running Plasma"
-pkgver=23.01.0.r0.g57421fb
+pkgver=24.01.0.r0.gc5e0c63
 pkgrel=2
 _arches=all
 arch=(
@@ -15,20 +15,20 @@ arch=(
 )
 license=(GPL-3.0-or-later)
 depends=(
-    kirigami2
-    kcontacts5
-    kpeople5
+    kirigami
+    kcontacts
+    kpeople
     kpeoplevcard
-    qt5-quickcontrols2
-    qt5-svg
-    kirigami-addons5
+    qt6-quickcontrols2
+    qt6-svg
+    kirigami-addons
 )
 makedepends=(
     cmake
     extra-cmake-modules
-    kdoctools5
+    kdoctools
 )
-_commit=57421fb6c3dd9b2b4b35f9e7aa840ef9da094ccc
+_commit=c5e0c63560a1fd67c2d138d24f9fbacfe2764a9d
 source=(
     "git+https://invent.kde.org/plasma-mobile/plasma-phonebook.git#commit=$_commit"
 )

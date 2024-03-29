@@ -19,12 +19,10 @@ depends=(
     kcontacts5
     modemmanager-qt5
     kpeople5
-    telepathy-qt
     libphonenumber
     kdbusaddons5
     kirigami-addons5
     knotifications5
-    telepathy-mission-control
     pulseaudio-qt
     kio5
     qt5-declarative

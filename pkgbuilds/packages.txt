@@ -2,14 +2,13 @@
 cmake-extras
 telepathy-farstream
 telephaty-qt
+plasma-nano
 plasma-mobile
-plasma-mobile-nm
 spacebar
 plasma-phonebook
 plasma-mobile-sounds
-qqc2-breeze-style
 plasma-dialer
 hfd-service
 plasma-mobile-settings
-desktop-plasma-mobile-full
-desktop-plasma-mobile-minimal
+flavour-plasma-mobile-minimal
+flavour-plasma-mobile

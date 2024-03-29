@@ -34,7 +34,6 @@ sha256sums=(
   'SKIP'
   'SKIP'
 )
-validpgpkeys=('AA33B0D27868E36C151780F0FE0B6D736B1195ED') # Alexandr Akulich
 
 build() {
   local _cmake_options=(

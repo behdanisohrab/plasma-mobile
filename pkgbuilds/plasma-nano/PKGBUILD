@@ -14,10 +14,11 @@ depends=(
   kservice
   kitemmodels
   qt6-svg
+  qt6-virtualkeyboard
 )
 makedepends=('cmake' 'extra-cmake-modules') 
-source=("https://download.kde.org/stable/plasma/$pkgver/$pkgname-$pkgver.tar.xz")
-sha256sums=('9818ce904f18304d30b22acd713980577de6cc0bd75ea0cfb64bed250d004b2a')
+source=("https://download.kde.org/stable/plasma/6.0.3/plasma-nano-6.0.3.tar.xz")
+sha256sums=('SKIP')
 
 prepare() {
   mkdir -p build
